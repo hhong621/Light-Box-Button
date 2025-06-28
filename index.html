@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Light Box Button</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rotation: 30deg;
+            --front-fill-default:  hsl(0deg 0% 100% / 0.4);
+            --front-fill-on:       hsl(45deg 100% 82% / 0.5);
+            --edge-fill:           hsl(0deg 0% 100% / 0.24);
+            --light-fill-default:  hsl(0deg 0 100 / 0.5);
+            --light-fill-hover:    hsl(0deg 0 100 / 1);
+            --light-fill-on:       hsl(45deg 100 50 / 1);
+            --default-transition:    all 300ms cubic-bezier(.3, .7, .4, 1);
+            --to-hover-transition:   all 250ms cubic-bezier(.3, .7, .4, 1);
+            --to-pressed-transition: all 200ms cubic-bezier(.3, .7, .4, 1);
+            --to-on-transition:      all 600ms cubic-bezier(.3, .7, .4, 1.5);
+        }
+
+        html {
+            box-sizing: border-box;
+        }
+        *, *:before, *:after {
+            box-sizing: inherit;
+        }
+
+        body {
+            height: 80vh;
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn {
+            border: none;
+            position: relative;
+            z-index: 2;
+            background: none;
+            cursor: pointer;
+            padding: 48px 128px;
+            display: inline-block;
+            margin: 16px 32px;
+            color: inherit;
+            font-size: 1em;
+            outline: none;
+        }
+
+        .btn_perspective {
+            -webkit-perspective: 800px;
+            -moz-perspective: 800px;
+            perspective: 800px;
+            display: inline-block;
+        }
+
+        .btn-3d {
+            display: block;
+            outline: 1px solid transparent;
+            -webkit-transform-style: preserve-3d;
+            -moz-transform-style: preserve-3d;
+            transform-style: preserve-3d;
+            -webkit-transform: rotateX(var(--rotation));
+            -moz-transform: rotateX(var(--rotation));
+            -ms-transform: rotateX(var(--rotation));
+            transform: rotateX(var(--rotation));
+            transition: var(--default-transition);
+        }
+
+        .btn-3d:hover .light {
+            filter: blur(8px);
+            background-color: var(--light-fill-hover);
+            transition: var(--to-hover-transition);
+        }
+
+        .btn-3d:active { 
+            translate: 0px 10px;
+            transition: var(--to-pressed-transition);
+        }
+
+        .btn-3d:active .glass-edge {
+            height: 20px;
+            transition: var(--to-pressed-transition);            
+        }
+
+        .btn-3d:active .light {
+            filter: blur(8px);
+            background-color: var(--light-fill-hover);
+            height: 92%;
+            transition: var(--to-pressed-transition);            
+        }
+
+        .btn-text {
+            font-family: 'Inter Tight', Arial, Helvetica, sans-serif;
+            font-weight: 400;
+            font-kerning: normal;
+            position: relative;
+            z-index: 3;
+            font-size: 24px;
+        }
+
+        .glass-front {
+            position: absolute;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            bottom: 0px;
+            background-color: var(--front-fill-default);
+            backdrop-filter: blur(14px);
+            transition: var(--default-transition);
+        }
+
+        .glass-edge {
+            position: absolute;
+            z-index: 2;
+            width: 100%;
+            height: 40px;
+            left: 0;
+            top: 100%;
+            background-color: var(--edge-fill);
+            backdrop-filter: blur(14px);
+            -webkit-transform-origin: 0% 0%;
+            -webkit-transform: rotateX(-90deg);
+            -moz-transform-origin: 0% 0%;
+            -moz-transform: rotateX(-90deg);
+            -ms-transform-origin: 0% 0%;
+            -ms-transform: rotateX(-90deg);
+            transform-origin: 0% 0%;
+            transform: rotateX(-90deg);
+            transition: var(--default-transition);
+        }
+
+        .light {
+            position: absolute;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            top: 0px;
+            background-color: var(--light-fill-default);
+            transform-origin: 0% 0%;
+            transform: rotateX(0deg);
+            transform: translateZ(-40px);
+            transition: var(--default-transition);
+        }
+
+        .light-2 {
+            position: absolute;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            bottom: 0px;
+            background-color: var(--light-fill-on);
+            opacity: 0;
+            filter: blur(12px);
+            transform-origin: 0% 0%;
+            transform: rotateX(0deg);
+            transform: translateZ(-40px);
+            transition: var(--default-transition);
+        }
+
+        .light-3 {
+            position: absolute;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            left: 0px;
+            bottom: 0px;
+            background-color: var(--light-fill-on);
+            opacity: 0;
+            filter: blur(16px);
+            transform-origin: 0% 0%;
+            transform: rotateX(0deg);
+            transform: translateZ(-40px);
+            transition: var(--default-transition);
+        }
+
+        .on .glass-front {
+            background-color: var(--front-fill-on);
+            transition: var(--to-on-transition);
+        }
+
+        .on .light {
+            filter: blur(8px);
+            background-color: var(--light-fill-on);
+            transition: var(--to-on-transition);
+        }
+
+        .on .light-2, .on .light-3 {
+            opacity: 1;
+            transition: var(--to-on-transition);
+        }
+
+        .on:hover .light {
+            background-color: var(--light-fill-on);
+        }
+
+        .on:active .light {
+            background-color: var(--light-fill-on);
+        }
+
+        .on:active .light-2, .on:active .light-3 {
+            opacity: 0;
+            filter: blur(8px);
+            transition: var(--to-pressed-transition);
+        }
+    </style>
+</head>
+<body>
+    <p class="btn_perspective">
+        <button class="btn btn-3d">
+            <div class="btn-text">Button</div>
+            <div class="glass-front"></div>
+            <div class="glass-edge"></div>
+            <div class="light"></div>
+            <div class="light-2"></div>
+            <div class="light-3"></div>
+        </button>
+    </p>
+    <script>
+        let btn = document.getElementsByClassName("btn")[0];
+        btn.addEventListener("click", toggleButton);
+
+        function toggleButton() {
+            if (!btn.classList.contains("on")) { //is not on
+                btn.classList.add("on");
+            } 
+            else { //is on
+                btn.classList.remove("on")
+            }
+        }
+    </script>
+</body>
+</html>
